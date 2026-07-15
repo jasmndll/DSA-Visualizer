@@ -2,7 +2,9 @@ import { useState } from "react";
 import DesktopIcon from "./DesktopIcon";
 import RetroWindow from "./RetroWindow";
 import Taskbar from "./Taskbar";
-import BubbleSortModule from "./modules/BubbleSortModule";
+import SortingModule from "./modules/SortingModule";
+import ArrayAlgorithmsModule from "./modules/ArrayAlgorithmsModule";
+import BacktrackingModule from "./modules/BacktrackingModule";
 import CodeEditorModule from "./modules/CodeEditorModule";
 import LinearModule from "./modules/LinearModule";
 import LinkedListModule from "./modules/LinkedListModule";
@@ -14,10 +16,14 @@ const MODULES = [
   { id: "array", label: "Array", glyph: "🗂️", accent: "sand", category: "Data Structures" },
   { id: "stack", label: "Stack", glyph: "📚", accent: "mint", category: "Data Structures" },
   { id: "queue", label: "Queue", glyph: "🎟️", accent: "blue", category: "Data Structures" },
+  { id: "deque", label: "Deque", glyph: "🎫", accent: "blue", category: "Data Structures" },
   { id: "linkedlist", label: "Linked List", glyph: "🔗", accent: "lilac", category: "Data Structures" },
+  { id: "doubly_ll", label: "Doubly LL", glyph: "⛓️", accent: "lilac", category: "Data Structures" },
   { id: "tree", label: "Tree", glyph: "🌳", accent: "mint", category: "Data Structures" },
   { id: "graph", label: "Graph", glyph: "🕸️", accent: "blue", category: "Data Structures" },
   { id: "sorting", label: "Sorting", glyph: "🔀", accent: "sand", category: "Algorithms" },
+  { id: "array_algos", label: "Array Algos", glyph: "🧮", accent: "lilac", category: "Algorithms" },
+  { id: "backtracking", label: "Backtracking", glyph: "🔙", accent: "pink", category: "Algorithms" },
   { id: "editor", label: "Code Editor", glyph: "💻", accent: "pink", category: "Tools" },
   { id: "chatbot", label: "Ask Chatbot", glyph: "💬", accent: "pink", category: "Tools" },
   { id: "progress", label: "My Progress", glyph: "📈", accent: "lilac", category: "Tools" },
@@ -91,12 +97,16 @@ export default function Desktop() {
 
 // Placeholder dispatcher
 function ModulePlaceholder({ id }) {
-  if (id === "sorting") return <BubbleSortModule />;
+  if (id === "sorting") return <SortingModule />;
+  if (id === "array_algos") return <ArrayAlgorithmsModule />;
+  if (id === "backtracking") return <BacktrackingModule />;
   if (id === "editor") return <CodeEditorModule />;
   if (id === "array") return <LinearModule type="array" />;
   if (id === "stack") return <LinearModule type="stack" />;
   if (id === "queue") return <LinearModule type="queue" />;
-  if (id === "linkedlist") return <LinkedListModule />;
+  if (id === "deque") return <LinearModule type="deque" />;
+  if (id === "linkedlist") return <LinkedListModule type="singly" />;
+  if (id === "doubly_ll") return <LinkedListModule type="doubly" />;
   if (id === "tree") return <TreeModule />;
   if (id === "graph") return <GraphModule />;
 

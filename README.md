@@ -1,16 +1,48 @@
-# React + Vite
+# DSA Visualizer
 
-This template provides a minimal setup to get React working in Vite with HMR and some Oxlint rules.
+An interactive, retro Windows-styled desktop application for visualizing Data Structures and Algorithms.
 
-Currently, two official plugins are available:
+Built with React, Vite, TailwindCSS, and Framer Motion.
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+## Features Currently Implemented
 
-## React Compiler
+- **Data Structures**: Array, Stack, Queue, Deque, Singly Linked List, Doubly Linked List, Tree, Graph.
+- **Sorting Algorithms**: Bubble Sort, Insertion Sort, Merge Sort, Quick Sort, Heap Sort, Counting Sort.
+- **Array Algorithms**: Kadane's Algorithm, Monotonic Stack, Sliding Window.
+- **Backtracking**: N-Queens on a visually animated Chessboard.
+- **Tools**: Interactive Code Editor, Progress Tracker.
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+## Prerequisites
 
-## Expanding the Oxlint configuration
+Before running the project, ensure you have the following installed:
+- [Node.js](https://nodejs.org/) (Version 18 or higher recommended)
+- `npm` (comes with Node.js)
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and Oxlint's TypeScript related rules in your project.
+## How to Run
+
+1. **Clone the repository:**
+   ```bash
+   git clone https://github.com/jasmndll/DSA-Visualizer.git
+   cd DSA-Visualizer
+   ```
+
+2. **Install dependencies:**
+   ```bash
+   npm install
+   ```
+
+3. **Start the development server:**
+   ```bash
+   npm run dev
+   ```
+
+4. **View the App:**
+   Open your browser and navigate to `http://localhost:5173/` (or the local URL provided in your terminal).
+
+## Usage
+
+- Double-click the icons on the desktop to open different modules.
+- For sorting and algorithm visualizers, use the dropdown menus to select the algorithm.
+- Click the play/pause, step-forward, and step-backward buttons in the playback controls to visualize the algorithm step by step.
+- Modify the animation speed using the speed slider.
+- For data structures (like Deque, Linked List), use the provided buttons to manipulate the data structures interactively.

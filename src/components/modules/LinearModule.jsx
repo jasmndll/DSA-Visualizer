@@ -6,30 +6,28 @@ export default function LinearModule({ type = "array" }) {
   const [inputValue, setInputValue] = useState("");
   const [highlighted, setHighlighted] = useState(null);
 
-  const handleAdd = () => {
+  const handleAddBack = () => {
     const val = parseInt(inputValue);
     if (isNaN(val)) return;
-    
-    if (type === "stack") {
-      setItems([...items, val]); // push to end
-    } else if (type === "queue") {
-      setItems([...items, val]); // enqueue to end
-    } else {
-      setItems([...items, val]); // append
-    }
+    setItems([...items, val]);
     setInputValue("");
   };
 
-  const handleRemove = () => {
+  const handleAddFront = () => {
+    const val = parseInt(inputValue);
+    if (isNaN(val)) return;
+    setItems([val, ...items]);
+    setInputValue("");
+  };
+
+  const handleRemoveBack = () => {
     if (items.length === 0) return;
-    
-    if (type === "stack") {
-      setItems(items.slice(0, -1)); // pop from end
-    } else if (type === "queue") {
-      setItems(items.slice(1)); // dequeue from front
-    } else {
-      setItems(items.slice(0, -1)); // pop
-    }
+    setItems(items.slice(0, -1));
+  };
+
+  const handleRemoveFront = () => {
+    if (items.length === 0) return;
+    setItems(items.slice(1));
   };
 
   return (
@@ -42,18 +40,50 @@ export default function LinearModule({ type = "array" }) {
           placeholder="value"
           className="font-body text-[11px] px-2 py-1 border-2 border-ink rounded-win w-20 bg-white"
         />
-        <button
-          onClick={handleAdd}
-          className="retro-btn font-display text-[10px] px-2 py-1 bg-mint-200 border-2 border-ink rounded-win shadow-winSm hover:bg-mint-300"
-        >
-          {type === "stack" ? "Push" : type === "queue" ? "Enqueue" : "Insert"}
-        </button>
-        <button
-          onClick={handleRemove}
-          className="retro-btn font-display text-[10px] px-2 py-1 bg-pink-200 border-2 border-ink rounded-win shadow-winSm hover:bg-pink-300"
-        >
-          {type === "stack" ? "Pop" : type === "queue" ? "Dequeue" : "Delete"}
-        </button>
+        
+        {type === "deque" ? (
+          <>
+            <button
+              onClick={handleAddFront}
+              className="retro-btn font-display text-[10px] px-2 py-1 bg-mint-200 border-2 border-ink rounded-win shadow-winSm hover:bg-mint-300"
+            >
+              Push Front
+            </button>
+            <button
+              onClick={handleAddBack}
+              className="retro-btn font-display text-[10px] px-2 py-1 bg-mint-200 border-2 border-ink rounded-win shadow-winSm hover:bg-mint-300"
+            >
+              Push Back
+            </button>
+            <button
+              onClick={handleRemoveFront}
+              className="retro-btn font-display text-[10px] px-2 py-1 bg-pink-200 border-2 border-ink rounded-win shadow-winSm hover:bg-pink-300"
+            >
+              Pop Front
+            </button>
+            <button
+              onClick={handleRemoveBack}
+              className="retro-btn font-display text-[10px] px-2 py-1 bg-pink-200 border-2 border-ink rounded-win shadow-winSm hover:bg-pink-300"
+            >
+              Pop Back
+            </button>
+          </>
+        ) : (
+          <>
+            <button
+              onClick={handleAddBack}
+              className="retro-btn font-display text-[10px] px-2 py-1 bg-mint-200 border-2 border-ink rounded-win shadow-winSm hover:bg-mint-300"
+            >
+              {type === "stack" ? "Push" : type === "queue" ? "Enqueue" : "Insert"}
+            </button>
+            <button
+              onClick={type === "queue" ? handleRemoveFront : handleRemoveBack}
+              className="retro-btn font-display text-[10px] px-2 py-1 bg-pink-200 border-2 border-ink rounded-win shadow-winSm hover:bg-pink-300"
+            >
+              {type === "stack" ? "Pop" : type === "queue" ? "Dequeue" : "Delete"}
+            </button>
+          </>
+        )}
       </div>
 
       <div className="bg-ink/95 rounded-win p-4 border-2 border-ink min-h-[120px] flex items-center justify-center">
@@ -62,7 +92,7 @@ export default function LinearModule({ type = "array" }) {
             {items.map((val, idx) => (
               <motion.div
                 key={`${idx}-${val}`}
-                initial={{ opacity: 0, scale: 0.8, y: type === 'stack' ? -20 : 0, x: type === 'queue' ? -20 : 0 }}
+                initial={{ opacity: 0, scale: 0.8, y: type === 'stack' ? -20 : 0, x: type === 'queue' || type === 'deque' ? -20 : 0 }}
                 animate={{ opacity: 1, scale: 1, y: 0, x: 0 }}
                 exit={{ opacity: 0, scale: 0.8, transition: { duration: 0.2 } }}
                 layout

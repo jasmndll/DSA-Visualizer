@@ -1,21 +1,33 @@
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { ArrowRight } from "lucide-react";
+import { ArrowRight, ArrowLeftRight } from "lucide-react";
 
-export default function LinkedListModule() {
+export default function LinkedListModule({ type = "singly" }) {
   const [nodes, setNodes] = useState([10, 20, 30]);
   const [inputValue, setInputValue] = useState("");
 
-  const handleInsert = () => {
+  const handleInsertTail = () => {
     const val = parseInt(inputValue);
     if (isNaN(val)) return;
     setNodes([...nodes, val]);
     setInputValue("");
   };
 
-  const handleDelete = () => {
+  const handleInsertHead = () => {
+    const val = parseInt(inputValue);
+    if (isNaN(val)) return;
+    setNodes([val, ...nodes]);
+    setInputValue("");
+  };
+
+  const handleDeleteTail = () => {
     if (nodes.length === 0) return;
     setNodes(nodes.slice(0, -1));
+  };
+
+  const handleDeleteHead = () => {
+    if (nodes.length === 0) return;
+    setNodes(nodes.slice(1));
   };
 
   return (
@@ -29,13 +41,25 @@ export default function LinkedListModule() {
           className="font-body text-[11px] px-2 py-1 border-2 border-ink rounded-win w-20 bg-white"
         />
         <button
-          onClick={handleInsert}
+          onClick={handleInsertHead}
+          className="retro-btn font-display text-[10px] px-2 py-1 bg-mint-200 border-2 border-ink rounded-win shadow-winSm hover:bg-mint-300"
+        >
+          Insert Head
+        </button>
+        <button
+          onClick={handleInsertTail}
           className="retro-btn font-display text-[10px] px-2 py-1 bg-mint-200 border-2 border-ink rounded-win shadow-winSm hover:bg-mint-300"
         >
           Insert Tail
         </button>
         <button
-          onClick={handleDelete}
+          onClick={handleDeleteHead}
+          className="retro-btn font-display text-[10px] px-2 py-1 bg-pink-200 border-2 border-ink rounded-win shadow-winSm hover:bg-pink-300"
+        >
+          Delete Head
+        </button>
+        <button
+          onClick={handleDeleteTail}
           className="retro-btn font-display text-[10px] px-2 py-1 bg-pink-200 border-2 border-ink rounded-win shadow-winSm hover:bg-pink-300"
         >
           Delete Tail
@@ -44,6 +68,11 @@ export default function LinkedListModule() {
 
       <div className="bg-ink/95 rounded-win p-4 border-2 border-ink min-h-[120px] flex items-center overflow-x-auto">
         <div className="flex items-center gap-1 min-w-max px-2">
+          {type === "doubly" && nodes.length > 0 && (
+             <div className="mr-2 flex items-center gap-1 text-white/50 text-xs font-body">
+               null <ArrowLeftRight size={16} />
+             </div>
+          )}
           <AnimatePresence>
             {nodes.map((val, idx) => (
               <motion.div
@@ -55,14 +84,16 @@ export default function LinkedListModule() {
                 className="flex items-center"
               >
                 {/* Node Box */}
-                <div className="w-12 h-10 bg-lilac-400 border-2 border-ink flex items-center justify-center font-display text-sm font-bold shadow-winSm">
+                <div className="w-12 h-10 bg-lilac-400 border-2 border-ink flex items-center justify-center font-display text-sm font-bold shadow-winSm relative">
                   {val}
+                  {idx === 0 && <span className="absolute -bottom-4 text-[8px] text-white/50 font-body">head</span>}
+                  {idx === nodes.length - 1 && idx !== 0 && <span className="absolute -bottom-4 text-[8px] text-white/50 font-body">tail</span>}
                 </div>
                 
                 {/* Next Pointer Arrow (except last node) */}
                 {idx < nodes.length - 1 && (
                   <div className="w-8 flex justify-center text-white/50">
-                    <ArrowRight size={16} />
+                    {type === "doubly" ? <ArrowLeftRight size={16} /> : <ArrowRight size={16} />}
                   </div>
                 )}
               </motion.div>
@@ -74,11 +105,11 @@ export default function LinkedListModule() {
               animate={{ opacity: 1 }}
               className="ml-2 flex items-center gap-1 text-white/50 text-xs font-body"
             >
-              <ArrowRight size={16} /> null
+              {type === "doubly" ? <ArrowLeftRight size={16} /> : <ArrowRight size={16} />} null
             </motion.div>
           )}
           {nodes.length === 0 && (
-            <span className="text-white/40 font-body text-xs">Empty Linked List</span>
+            <span className="text-white/40 font-body text-xs">Empty {type === "doubly" ? "Doubly " : ""}Linked List</span>
           )}
         </div>
       </div>

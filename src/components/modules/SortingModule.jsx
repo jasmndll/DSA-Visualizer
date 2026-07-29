@@ -25,6 +25,10 @@ import {
   generateCountingSortSteps,
   countingSortPseudocode,
 } from "../../algorithms/countingSort";
+import {
+  generateSelectionSortSteps,
+  selectionSortPseudocode,
+} from "../../algorithms/selectionSort";
 
 import ArrayBars from "../visualizers/ArrayBars";
 import PlaybackControls from "../PlaybackControls";
@@ -41,6 +45,12 @@ const ALGORITHMS = {
     name: "Insertion Sort",
     generator: generateInsertionSortSteps,
     pseudocode: insertionSortPseudocode,
+  },
+  selection: {
+    id: "selection",
+    name: "Selection Sort",
+    generator: generateSelectionSortSteps,
+    pseudocode: selectionSortPseudocode,
   },
   merge: {
     id: "merge",

@@ -12,6 +12,7 @@ import LinkedListModule from "./modules/LinkedListModule";
 import TreeModule from "./modules/TreeModule";
 import RedBlackModule from "./modules/RedBlackModule";
 import GraphModule from "./modules/GraphModule";
+import DynamicProgrammingModule from "./modules/DynamicProgrammingModule";
 
 const MODULES = [
   { id: "array", label: "Array", glyph: "🗂️", accent: "sand", category: "Data Structures" },
@@ -26,6 +27,7 @@ const MODULES = [
   { id: "sorting", label: "Sorting", glyph: "🔀", accent: "sand", category: "Algorithms" },
   { id: "array_algos", label: "Array Algos", glyph: "🧮", accent: "lilac", category: "Algorithms" },
   { id: "backtracking", label: "Backtracking", glyph: "🔙", accent: "pink", category: "Algorithms" },
+  { id: "dp", label: "Dynamic Programming", glyph: "🎒", accent: "pink", category: "Algorithms" },
   // Tools are now in the MonitorFrame top toolbar — still openable via the frame
   { id: "editor", label: "Code Editor", glyph: "💻", accent: "pink", category: "Tools" },
   { id: "chatbot", label: "Ask Chatbot", glyph: "💬", accent: "pink", category: "Tools" },
@@ -118,6 +120,7 @@ function ModulePlaceholder({ id }) {
   if (id === "tree") return <TreeModule />;
   if (id === "redblack") return <RedBlackModule />;
   if (id === "graph") return <GraphModule />;
+  if (id === "dp") return <DynamicProgrammingModule />;
 
   return (
     <div className="flex items-center justify-center p-8 bg-ink/5 rounded border border-ink/10">

@@ -59,37 +59,56 @@ export default function CodeEditorModule() {
 
   const handleRun = async () => {
     setIsRunning(true);
-    setOutput("Running...");
-
-    // Simulate network delay
-    await new Promise(r => setTimeout(r, 800));
+    setOutput("Running on Wandbox API...");
 
     try {
-      if (language === "javascript") {
-        // Intercept console.log to capture output
-        const logs = [];
-        const originalLog = console.log;
-        console.log = (...args) => {
-          logs.push(args.join(" "));
-          originalLog(...args);
-        };
+      let compilerName = "nodejs-20.17.0";
+      if (language === "python") compilerName = "cpython-3.14.0";
+      if (language === "cpp") compilerName = "gcc-13.2.0";
+      if (language === "java") compilerName = "openjdk-jdk-22+36";
 
-        const execute = new Function(code);
-        execute();
-        
-        console.log = originalLog;
-        setOutput(logs.length > 0 ? logs.join("\n") : "Program finished with no output.");
-      } else {
-        // Mock output for non-JS languages since this is a frontend-only design
-        let mockOut = `[System: Backend compilation endpoint not connected. Simulating execution for ${LANGUAGES[language].name}...]\n\n`;
-        
-        if (code === LANGUAGES[language].defaultCode) {
-          mockOut += "Hello, World!";
-        } else {
-          mockOut += `(Simulated output for ${language} code)`;
-        }
-        setOutput(mockOut);
+      const payload = {
+        code: code,
+        compiler: compilerName,
+        save: false
+      };
+
+      const response = await fetch("https://wandbox.org/api/compile.json", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(payload)
+      });
+
+      const data = await response.json();
+
+      let finalOutput = "";
+      
+      // Compilation / compiler messages
+      if (data.compiler_error) {
+        finalOutput += "--- Compilation Error ---\n" + data.compiler_error + "\n";
+      } else if (data.compiler_message) {
+        // Only append if it's something meaningful, sometimes it's just warnings.
+        // We'll append it just in case.
+        // finalOutput += "Compiler message:\n" + data.compiler_message + "\n";
       }
+
+      // Runtime errors
+      if (data.program_error) {
+        finalOutput += "--- Runtime Error ---\n" + data.program_error + "\n";
+      }
+
+      // Standard output
+      if (data.program_output) {
+        finalOutput += data.program_output;
+      } else if (data.program_message && !data.program_error && !data.program_output) {
+        finalOutput += data.program_message;
+      }
+      
+      if (data.status !== "0" && data.status !== undefined) {
+        finalOutput += `\n\n[Process exited with status ${data.status}]`;
+      }
+
+      setOutput(finalOutput || "Program finished with no output.");
     } catch (err) {
       setOutput("Error executing code:\n" + err.message);
     } finally {

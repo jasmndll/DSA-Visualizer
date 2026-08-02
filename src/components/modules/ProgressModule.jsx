@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import apiClient from "../../api/client";
 import { useAuthStore } from "../../store/authStore";
+import ProgressHeatmap from "../ProgressHeatmap";
 
 export default function ProgressModule() {
   const { isAuthenticated } = useAuthStore();
@@ -63,6 +64,10 @@ export default function ProgressModule() {
   if (progress && progress.length === 0) {
     return (
       <div className="space-y-3">
+        <h3 className="font-display font-bold text-[14px]">activity</h3>
+        <ProgressHeatmap />
+        
+        <h3 className="font-display font-bold text-[14px] mt-4">modules</h3>
         <p className="font-body text-[12px] text-center p-4 border-2 border-ink rounded-win bg-white shadow-winSm">
           no progress yet — try a module!
         </p>
@@ -72,6 +77,10 @@ export default function ProgressModule() {
 
   return (
     <div className="space-y-3">
+      <h3 className="font-display font-bold text-[14px]">activity</h3>
+      <ProgressHeatmap />
+
+      <h3 className="font-display font-bold text-[14px] mt-4">modules</h3>
       {progress?.map((item, idx) => {
         let badgeColor = "bg-sand-200";
         if (item.status === "IN_PROGRESS") badgeColor = "bg-blue-200";

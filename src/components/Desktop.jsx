@@ -96,17 +96,21 @@ export default function Desktop() {
 
         {/* Open windows */}
         <div className="relative z-20 flex flex-wrap gap-6 px-8 items-start">
-          {openModulesData.map((m) => (
-            <RetroWindow
-              key={m.id}
-              title={m.label.toLowerCase() + ".exe"}
-              accent={m.accent}
-              className={m.id === "editor" ? "w-full max-w-2xl" : "w-full sm:w-[420px]"}
-              onClose={() => closeModule(m.id)}
-            >
-              <ModulePlaceholder id={m.id} />
-            </RetroWindow>
-          ))}
+          {openModulesData.map((m) => {
+            const isDSOrAlgo = m.category === "Data Structures" || m.category === "Algorithms";
+            return (
+              <RetroWindow
+                key={m.id}
+                title={m.label.toLowerCase() + ".exe"}
+                accent={m.accent}
+                moduleKey={isDSOrAlgo ? m.id : undefined}
+                className={m.id === "editor" ? "w-full max-w-2xl" : "w-full sm:w-[420px]"}
+                onClose={() => closeModule(m.id)}
+              >
+                <ModulePlaceholder id={m.id} />
+              </RetroWindow>
+            );
+          })}
         </div>
 
         <Taskbar

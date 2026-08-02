@@ -1,5 +1,6 @@
 import Editor from "@monaco-editor/react";
 import { useState } from "react";
+import apiClient from "../../api/client";
 
 const LANGUAGES = {
   javascript: {
@@ -59,58 +60,24 @@ export default function CodeEditorModule() {
 
   const handleRun = async () => {
     setIsRunning(true);
-    setOutput("Running on Wandbox API...");
+    setOutput("Running...");
 
     try {
-      let compilerName = "nodejs-20.17.0";
-      if (language === "python") compilerName = "cpython-3.14.0";
-      if (language === "cpp") compilerName = "gcc-13.2.0";
-      if (language === "java") compilerName = "openjdk-jdk-22+36";
-
-      const payload = {
-        code: code,
-        compiler: compilerName,
-        save: false
-      };
-
-      const response = await fetch("https://wandbox.org/api/compile.json", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(payload)
+      const { data } = await apiClient.post("/execute", {
+        language,
+        code,
       });
 
-      const data = await response.json();
-
-      let finalOutput = "";
-      
-      // Compilation / compiler messages
-      if (data.compiler_error) {
-        finalOutput += "--- Compilation Error ---\n" + data.compiler_error + "\n";
-      } else if (data.compiler_message) {
-        // Only append if it's something meaningful, sometimes it's just warnings.
-        // We'll append it just in case.
-        // finalOutput += "Compiler message:\n" + data.compiler_message + "\n";
+      if (data.stderr) {
+        setOutput(data.stdout
+          ? data.stdout + "\n--- stderr ---\n" + data.stderr
+          : data.stderr);
+      } else {
+        setOutput(data.stdout || "Program finished with no output.");
       }
-
-      // Runtime errors
-      if (data.program_error) {
-        finalOutput += "--- Runtime Error ---\n" + data.program_error + "\n";
-      }
-
-      // Standard output
-      if (data.program_output) {
-        finalOutput += data.program_output;
-      } else if (data.program_message && !data.program_error && !data.program_output) {
-        finalOutput += data.program_message;
-      }
-      
-      if (data.status !== "0" && data.status !== undefined) {
-        finalOutput += `\n\n[Process exited with status ${data.status}]`;
-      }
-
-      setOutput(finalOutput || "Program finished with no output.");
     } catch (err) {
-      setOutput("Error executing code:\n" + err.message);
+      const msg = err.response?.data?.error || err.message;
+      setOutput("Error executing code:\n" + msg);
     } finally {
       setIsRunning(false);
     }
@@ -163,7 +130,11 @@ export default function CodeEditorModule() {
       {/* Console Output */}
       <div className="h-1/3 bg-ink/95 border-2 border-ink rounded-win p-2 overflow-y-auto">
         <div className="font-display text-[10px] text-mint-200 mb-1 border-b border-mint-200/20 pb-1">CONSOLE OUTPUT</div>
-        <pre className="font-body text-[11px] text-white/90 whitespace-pre-wrap">
+        <pre className={`font-body text-[11px] whitespace-pre-wrap ${
+          output.includes("--- stderr ---") || output.startsWith("Error executing code:")
+            ? "text-red-400"
+            : "text-white/90"
+        }`}>
           {output || "Waiting for execution..."}
         </pre>
       </div>

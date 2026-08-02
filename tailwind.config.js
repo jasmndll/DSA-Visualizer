@@ -14,6 +14,12 @@ export default {
           100: "#F2EBE1",
           200: "#E6DCCC"
         },
+        "slate-bg": "#4C5B6B",
+        "teal-btn": "#1F7A71",
+        "grid-line": "#E3E3DC",
+        "pill-bg": "#E5E9EC",
+        "pill-border": "#3E4C5A",
+        "screen-bg": "#F6F6F2",
         pink: {
           200: "#FFB5E8",
           300: "#FF9CEE",

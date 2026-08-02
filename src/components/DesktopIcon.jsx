@@ -1,15 +1,21 @@
-export default function DesktopIcon({ label, glyph, onClick }) {
+import { MODERN_CARD_CLASSES, MODERN_CARD_LABEL_CLASSES } from "../utils/design-tokens";
+
+export default function DesktopIcon({ label, icon: Icon, onClick, disabled }) {
   return (
     <button
-      onClick={onClick}
-      className="flex flex-col items-center gap-2 group w-20 text-center"
+      onClick={disabled ? undefined : onClick}
+      disabled={disabled}
+      className={`${MODERN_CARD_CLASSES} ${disabled ? "opacity-50 cursor-not-allowed" : ""}`}
     >
-      <div className="w-12 h-12 bg-ink/10 border-2 border-transparent group-hover:border-ink rounded-lg flex items-center justify-center text-2xl shadow-sm transition-all group-active:scale-95 group-active:bg-ink/20">
-        {glyph}
-      </div>
-      <span className="font-display text-[11px] text-ink/90 font-medium leading-tight px-1 group-hover:bg-ink group-hover:text-white rounded-sm">
+      {Icon && <Icon size={32} strokeWidth={2} className="text-slate-800" />}
+      <span className={MODERN_CARD_LABEL_CLASSES}>
         {label}
       </span>
+      {disabled && (
+        <span className="font-display text-[9px] bg-gray-100 text-gray-500 px-2 py-0.5 rounded-full absolute -bottom-3 shadow-sm border border-gray-200">
+          SOON
+        </span>
+      )}
     </button>
   );
 }

@@ -1,4 +1,9 @@
 import { useState } from "react";
+import {
+  Rows3, Layers, ArrowRightToLine, ArrowLeftRight, Link, Link2, 
+  Network, GitMerge, Share2, ArrowUpDown, Calculator, Route, 
+  Package, Terminal, MessageSquare, TrendingUp, User, Brain, Database, Cpu
+} from "lucide-react";
 import DesktopIcon from "./DesktopIcon";
 import RetroWindow from "./RetroWindow";
 import Taskbar from "./Taskbar";
@@ -13,29 +18,38 @@ import TreeModule from "./modules/TreeModule";
 import RedBlackModule from "./modules/RedBlackModule";
 import GraphModule from "./modules/GraphModule";
 import DynamicProgrammingModule from "./modules/DynamicProgrammingModule";
+import AuthModule from "./modules/AuthModule";
+import ChatModule from "./modules/ChatModule";
+import ProgressModule from "./modules/ProgressModule";
 
 const MODULES = [
-  { id: "array", label: "Array", glyph: "🗂️", accent: "sand", category: "Data Structures" },
-  { id: "stack", label: "Stack", glyph: "📚", accent: "mint", category: "Data Structures" },
-  { id: "queue", label: "Queue", glyph: "🎟️", accent: "blue", category: "Data Structures" },
-  { id: "deque", label: "Deque", glyph: "🎫", accent: "blue", category: "Data Structures" },
-  { id: "linkedlist", label: "Linked List", glyph: "🔗", accent: "lilac", category: "Data Structures" },
-  { id: "doubly_ll", label: "Doubly LL", glyph: "⛓️", accent: "lilac", category: "Data Structures" },
-  { id: "tree", label: "Tree", glyph: "🌳", accent: "mint", category: "Data Structures" },
-  { id: "redblack", label: "Red-Black Tree", glyph: "🔴", accent: "pink", category: "Data Structures" },
-  { id: "graph", label: "Graph", glyph: "🕸️", accent: "blue", category: "Data Structures" },
-  { id: "sorting", label: "Sorting", glyph: "🔀", accent: "sand", category: "Algorithms" },
-  { id: "array_algos", label: "Array Algos", glyph: "🧮", accent: "lilac", category: "Algorithms" },
-  { id: "backtracking", label: "Backtracking", glyph: "🔙", accent: "pink", category: "Algorithms" },
-  { id: "dp", label: "Dynamic Programming", glyph: "🎒", accent: "pink", category: "Algorithms" },
+  { id: "array", label: "Array", icon: Rows3, accent: "sand", category: "Data Structures" },
+  { id: "stack", label: "Stack", icon: Layers, accent: "mint", category: "Data Structures" },
+  { id: "queue", label: "Queue", icon: ArrowRightToLine, accent: "blue", category: "Data Structures" },
+  { id: "deque", label: "Deque", icon: ArrowLeftRight, accent: "blue", category: "Data Structures" },
+  { id: "linkedlist", label: "Linked List", icon: Link, accent: "lilac", category: "Data Structures" },
+  { id: "doubly_ll", label: "Doubly LL", icon: Link2, accent: "lilac", category: "Data Structures" },
+  { id: "tree", label: "Tree", icon: Network, accent: "mint", category: "Data Structures" },
+  { id: "redblack", label: "Red-Black Tree", icon: GitMerge, accent: "pink", category: "Data Structures" },
+  { id: "graph", label: "Graph", icon: Share2, accent: "blue", category: "Data Structures" },
+  { id: "sorting", label: "Sorting", icon: ArrowUpDown, accent: "sand", category: "Algorithms" },
+  { id: "array_algos", label: "Array Algos", icon: Calculator, accent: "lilac", category: "Algorithms" },
+  { id: "backtracking", label: "Backtracking", icon: Route, accent: "pink", category: "Algorithms" },
+  { id: "dp", label: "Dynamic Programming", icon: Package, accent: "pink", category: "Algorithms" },
   // Tools are now in the MonitorFrame top toolbar — still openable via the frame
-  { id: "editor", label: "Code Editor", glyph: "💻", accent: "pink", category: "Tools" },
-  { id: "chatbot", label: "Ask Chatbot", glyph: "💬", accent: "pink", category: "Tools" },
-  { id: "progress", label: "My Progress", glyph: "📈", accent: "lilac", category: "Tools" },
+  { id: "editor", label: "Code Editor", icon: Terminal, accent: "pink", category: "Tools" },
+  { id: "chatbot", label: "Ask Chatbot", icon: MessageSquare, accent: "pink", category: "Tools" },
+  { id: "progress", label: "My Progress", icon: TrendingUp, accent: "lilac", category: "Tools" },
+  { id: "account", label: "Account", icon: User, accent: "pink", category: "Tools" },
+  
+  // Coming Soon
+  { id: "ml", label: "Machine Learning", icon: Brain, accent: "sand", category: "Coming Soon", disabled: true },
+  { id: "db", label: "Databases", icon: Database, accent: "sand", category: "Coming Soon", disabled: true },
+  { id: "sys", label: "Systems", icon: Cpu, accent: "sand", category: "Coming Soon", disabled: true },
 ];
 
 // Only show DS + Algorithms categories on the desktop grid
-const DESKTOP_CATEGORIES = ["Data Structures", "Algorithms"];
+const DESKTOP_CATEGORIES = ["Data Structures", "Algorithms", "Coming Soon"];
 
 export default function Desktop() {
   const [openIds, setOpenIds] = useState(["sorting"]);
@@ -57,13 +71,13 @@ export default function Desktop() {
 
   return (
     <MonitorFrame onOpenTool={openModule}>
-      <div className="min-h-full pb-16 relative overflow-hidden">
+      <div className="flex flex-col flex-1 min-h-full pb-16 relative overflow-hidden">
 
         {/* Desktop icon grid */}
         <div className="relative z-10 flex flex-col gap-8 p-8 max-w-4xl">
           {Object.entries(categories).map(([category, items]) => (
             <div key={category} className="flex flex-col gap-3">
-              <h2 className="font-display text-sm font-bold text-ink/70 uppercase tracking-widest border-b-2 border-ink/20 pb-1 w-max">
+              <h2 className="font-display text-sm font-bold text-slate-700 uppercase tracking-widest pb-1 w-max">
                 {category}
               </h2>
               <div className="flex flex-wrap gap-6">
@@ -71,7 +85,8 @@ export default function Desktop() {
                   <DesktopIcon
                     key={m.id}
                     label={m.label}
-                    glyph={m.glyph}
+                    icon={m.icon}
+                    disabled={m.disabled}
                     onClick={() => openModule(m.id)}
                   />
                 ))}
@@ -121,6 +136,9 @@ function ModulePlaceholder({ id }) {
   if (id === "redblack") return <RedBlackModule />;
   if (id === "graph") return <GraphModule />;
   if (id === "dp") return <DynamicProgrammingModule />;
+  if (id === "account") return <AuthModule />;
+  if (id === "chatbot") return <ChatModule />;
+  if (id === "progress") return <ProgressModule />;
 
   return (
     <div className="flex items-center justify-center p-8 bg-ink/5 rounded border border-ink/10">

@@ -19,7 +19,6 @@ import RedBlackModule from "./modules/RedBlackModule";
 import GraphModule from "./modules/GraphModule";
 import DynamicProgrammingModule from "./modules/DynamicProgrammingModule";
 import AuthModule from "./modules/AuthModule";
-import ChatModule from "./modules/ChatModule";
 import ProgressModule from "./modules/ProgressModule";
 
 const MODULES = [
@@ -137,7 +136,6 @@ function ModulePlaceholder({ id }) {
   if (id === "graph") return <GraphModule />;
   if (id === "dp") return <DynamicProgrammingModule />;
   if (id === "account") return <AuthModule />;
-  if (id === "chatbot") return <ChatModule />;
   if (id === "progress") return <ProgressModule />;
 
   return (

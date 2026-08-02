@@ -1,4 +1,5 @@
 import { Terminal, MessageSquare, TrendingUp, User, Activity } from "lucide-react";
+import { useNavigate } from "react-router-dom";
 import { useClock } from "../hooks/useClock";
 import { MODERN_TOOLBAR_BTN_CLASSES } from "../utils/design-tokens";
 
@@ -11,6 +12,7 @@ const TOOLS = [
 
 export default function MonitorFrame({ children, onOpenTool }) {
   const time = useClock(1000);
+  const navigate = useNavigate();
 
   return (
     <div className="flex flex-col min-h-screen bg-[#4C5B6B] px-6 pt-6 pb-20">
@@ -33,7 +35,13 @@ export default function MonitorFrame({ children, onOpenTool }) {
             return (
               <button
                 key={tool.id}
-                onClick={() => onOpenTool(tool.id)}
+                onClick={() => {
+                  if (tool.id === "chatbot") {
+                    navigate("/chat");
+                  } else {
+                    onOpenTool && onOpenTool(tool.id);
+                  }
+                }}
                 className={MODERN_TOOLBAR_BTN_CLASSES}
                 title={tool.label}
               >

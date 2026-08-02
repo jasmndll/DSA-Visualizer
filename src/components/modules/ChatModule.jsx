@@ -1,5 +1,6 @@
 import { useState, useRef, useEffect } from "react";
 import apiClient from "../../api/client";
+import ReactMarkdown from "react-markdown";
 
 export default function ChatModule() {
   const [messages, setMessages] = useState([
@@ -57,7 +58,21 @@ export default function ChatModule() {
                   : "bg-lilac-400"
               }`}
             >
-              {msg.content}
+              {msg.role === "bot" ? (
+                <ReactMarkdown
+                  components={{
+                    code: ({ inline, children }) =>
+                      inline
+                        ? <code className="bg-ink/10 px-1 rounded-sm font-body text-[11px]">{children}</code>
+                        : <pre className="bg-ink text-mint-200 font-body text-[11px] p-2 rounded-win overflow-x-auto my-1"><code>{children}</code></pre>,
+                    p: ({ children }) => <p className="mb-2 last:mb-0">{children}</p>,
+                  }}
+                >
+                  {msg.content}
+                </ReactMarkdown>
+              ) : (
+                msg.content
+              )}
             </div>
           </div>
         ))}

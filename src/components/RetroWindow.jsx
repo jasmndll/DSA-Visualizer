@@ -1,4 +1,4 @@
-export default function RetroWindow({ title, accent, className = "", onClose, children }) {
+export default function RetroWindow({ title, accent, className = "", bodyClassName = "", onClose, children }) {
   // Map accent to background color
   const accentColors = {
     sand: "bg-sand-200",
@@ -27,7 +27,7 @@ export default function RetroWindow({ title, accent, className = "", onClose, ch
         </button>
       </div>
       {/* Window Content */}
-      <div className="p-4">
+      <div className={`p-4 ${bodyClassName}`}>
         {children}
       </div>
     </div>

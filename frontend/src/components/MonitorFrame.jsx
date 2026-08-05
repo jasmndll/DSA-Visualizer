@@ -40,6 +40,8 @@ export default function MonitorFrame({ children, onOpenTool }) {
                     navigate("/chat");
                   } else if (tool.id === "editor") {
                     navigate("/editor");
+                  } else if (tool.id === "account") {
+                    navigate("/account");
                   } else {
                     onOpenTool && onOpenTool(tool.id);
                   }

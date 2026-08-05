@@ -138,7 +138,6 @@ function ModulePlaceholder({ id }) {
   if (id === "redblack") return <RedBlackModule />;
   if (id === "graph") return <GraphModule />;
   if (id === "dp") return <DynamicProgrammingModule />;
-  if (id === "account") return <AuthModule />;
   if (id === "progress") return <ProgressModule />;
 
   return (

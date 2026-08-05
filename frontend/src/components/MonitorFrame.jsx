@@ -38,6 +38,8 @@ export default function MonitorFrame({ children, onOpenTool }) {
                 onClick={() => {
                   if (tool.id === "chatbot") {
                     navigate("/chat");
+                  } else if (tool.id === "editor") {
+                    navigate("/editor");
                   } else {
                     onOpenTool && onOpenTool(tool.id);
                   }

@@ -128,7 +128,6 @@ function ModulePlaceholder({ id }) {
   if (id === "sorting") return <SortingModule />;
   if (id === "array_algos") return <ArrayAlgorithmsModule />;
   if (id === "backtracking") return <BacktrackingModule />;
-  if (id === "editor") return <CodeEditorModule />;
   if (id === "array") return <LinearModule type="array" />;
   if (id === "stack") return <LinearModule type="stack" />;
   if (id === "queue") return <LinearModule type="queue" />;

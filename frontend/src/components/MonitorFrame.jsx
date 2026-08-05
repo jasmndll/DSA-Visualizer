@@ -42,6 +42,8 @@ export default function MonitorFrame({ children, onOpenTool }) {
                     navigate("/editor");
                   } else if (tool.id === "account") {
                     navigate("/account");
+                  } else if (tool.id === "progress") {
+                    navigate("/progress");
                   } else {
                     onOpenTool && onOpenTool(tool.id);
                   }

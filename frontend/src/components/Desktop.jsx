@@ -138,7 +138,6 @@ function ModulePlaceholder({ id }) {
   if (id === "redblack") return <RedBlackModule />;
   if (id === "graph") return <GraphModule />;
   if (id === "dp") return <DynamicProgrammingModule />;
-  if (id === "progress") return <ProgressModule />;
 
   return (
     <div className="flex items-center justify-center p-8 bg-ink/5 rounded border border-ink/10">

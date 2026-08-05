@@ -4,6 +4,9 @@ A retro, Windows-98-styled platform for learning data structures and algorithms 
 
 **Live app:** https://dsa-visualizer7.netlify.app/
 
+<img width="1919" height="1003" alt="image" src="https://github.com/user-attachments/assets/66bc3985-1a47-4332-91df-4c5cc528be93" />
+
+
 > Note: the backend runs on a free-tier host that sleeps after 15 minutes of inactivity. The first request after a period of idle time may take 30-60 seconds to respond while it wakes up.
 
 ---

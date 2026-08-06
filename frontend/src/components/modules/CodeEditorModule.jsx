@@ -48,6 +48,7 @@ public class Main {
 export default function CodeEditorModule() {
   const [language, setLanguage] = useState("javascript");
   const [code, setCode] = useState(LANGUAGES["javascript"].defaultCode);
+  const [stdin, setStdin] = useState("");
   const [output, setOutput] = useState("");
   const [isRunning, setIsRunning] = useState(false);
 
@@ -66,6 +67,7 @@ export default function CodeEditorModule() {
       const { data } = await apiClient.post("/execute", {
         language,
         code,
+        stdin,
       });
 
       if (data.stderr) {
@@ -127,16 +129,30 @@ export default function CodeEditorModule() {
         />
       </div>
 
-      {/* Console Output */}
-      <div className="h-1/3 bg-ink/95 border-2 border-ink rounded-win p-2 overflow-y-auto">
-        <div className="font-display text-[10px] text-mint-200 mb-1 border-b border-mint-200/20 pb-1">CONSOLE OUTPUT</div>
-        <pre className={`font-body text-[11px] whitespace-pre-wrap ${
-          output.includes("--- stderr ---") || output.startsWith("Error executing code:")
-            ? "text-red-400"
-            : "text-white/90"
-        }`}>
-          {output || "Waiting for execution..."}
-        </pre>
+      {/* Bottom Panel: Input & Console */}
+      <div className="flex gap-2 h-1/3">
+        {/* Input (stdin) */}
+        <div className="flex flex-col w-1/3 bg-white border-2 border-ink rounded-win p-2">
+          <div className="font-display text-[10px] text-ink mb-1 border-b border-ink/20 pb-1">INPUT (STDIN)</div>
+          <textarea
+            value={stdin}
+            onChange={(e) => setStdin(e.target.value)}
+            placeholder="Enter program input here, one line per prompt..."
+            className="flex-grow font-body text-[11px] outline-none resize-none bg-transparent"
+          />
+        </div>
+
+        {/* Console Output */}
+        <div className="flex flex-col w-2/3 bg-ink/95 border-2 border-ink rounded-win p-2 overflow-y-auto">
+          <div className="font-display text-[10px] text-mint-200 mb-1 border-b border-mint-200/20 pb-1">CONSOLE OUTPUT</div>
+          <pre className={`font-body text-[11px] whitespace-pre-wrap ${
+            output.includes("--- stderr ---") || output.startsWith("Error executing code:")
+              ? "text-red-400"
+              : "text-white/90"
+          }`}>
+            {output || "Waiting for execution..."}
+          </pre>
+        </div>
       </div>
     </div>
   );

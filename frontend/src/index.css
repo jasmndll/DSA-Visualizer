@@ -22,3 +22,35 @@
     @apply active:translate-x-0.5 active:translate-y-0.5 active:shadow-none transition-all;
   }
 }
+
+/* Retro Scrollbar */
+::-webkit-scrollbar {
+  width: 16px;
+  height: 16px;
+  background-color: #e2e8f0; /* bg-paper/slate-200 */
+  border-left: 2px solid #1e293b;
+}
+
+::-webkit-scrollbar-thumb {
+  background-color: #cbd5e1;
+  border: 2px solid #1e293b;
+  border-right-color: #94a3b8;
+  border-bottom-color: #94a3b8;
+}
+
+::-webkit-scrollbar-thumb:active {
+  background-color: #94a3b8;
+  border: 2px solid #1e293b;
+  border-top-color: #94a3b8;
+  border-left-color: #94a3b8;
+}
+
+::-webkit-scrollbar-corner {
+  background-color: #e2e8f0;
+}
+
+/* Selection Color */
+::selection {
+  background-color: #f472b6; /* pink-400 */
+  color: #1e293b; /* ink */
+}

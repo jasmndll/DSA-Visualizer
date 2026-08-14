@@ -1,7 +1,9 @@
+import { Suspense, lazy } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import MonitorFrame from "../components/MonitorFrame";
-import CodeEditorModule from "../components/modules/CodeEditorModule";
 import RetroWindow from "../components/RetroWindow";
+
+const CodeEditorModule = lazy(() => import("../components/modules/CodeEditorModule"));
 
 export default function EditorPage() {
   const navigate = useNavigate();
@@ -24,7 +26,9 @@ export default function EditorPage() {
           bodyClassName="flex flex-col flex-1 min-h-0 overflow-y-auto"
           onClose={() => navigate("/")}
         >
-          <CodeEditorModule />
+          <Suspense fallback={<div className="font-display p-4 text-center text-ink/70">Loading Editor Engine...</div>}>
+            <CodeEditorModule />
+          </Suspense>
         </RetroWindow>
       </div>
     </MonitorFrame>

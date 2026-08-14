@@ -1,6 +1,7 @@
 import { useState } from "react";
 import apiClient from "../api/client";
 import { useAuthStore } from "../store/authStore";
+import { motion } from "framer-motion";
 
 export default function RetroWindow({ title, accent, className = "", bodyClassName = "", moduleKey, onClose, children }) {
   const { isAuthenticated } = useAuthStore();
@@ -38,9 +39,14 @@ export default function RetroWindow({ title, accent, className = "", bodyClassNa
   };
 
   return (
-    <div className={`flex flex-col bg-paper border-2 border-ink rounded-win shadow-winSm ${className}`}>
+    <motion.div 
+      drag 
+      dragMomentum={false}
+      dragHandleClassName="drag-handle"
+      className={`flex flex-col bg-paper border-2 border-ink rounded-win shadow-winSm ${className}`}
+    >
       {/* Window Title Bar */}
-      <div className={`flex items-center justify-between px-2 py-1 border-b-2 border-ink ${headerBg} ${headerText}`}>
+      <div className={`drag-handle cursor-move flex items-center justify-between px-2 py-1 border-b-2 border-ink ${headerBg} ${headerText}`}>
         <div className="font-display text-[12px] font-bold tracking-wide">
           {title}
         </div>
@@ -78,6 +84,6 @@ export default function RetroWindow({ title, accent, className = "", bodyClassNa
           </div>
         )}
       </div>
-    </div>
+    </motion.div>
   );
 }

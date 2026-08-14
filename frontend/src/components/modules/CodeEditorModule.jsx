@@ -1,65 +1,20 @@
 import Editor from "@monaco-editor/react";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import apiClient from "../../api/client";
-
-const LANGUAGES = {
-  javascript: {
-    name: "JavaScript",
-    version: "18.15.0",
-    defaultCode: `// Welcome to the Retro Editor!
-function greeting() {
-  console.log("Hello, World!");
-}
-
-greeting();`
-  },
-  python: {
-    name: "Python",
-    version: "3.10.0",
-    defaultCode: `# Welcome to the Retro Editor!
-def greeting():
-    print("Hello, World!")
-
-greeting()`
-  },
-  cpp: {
-    name: "C++",
-    version: "10.2.0",
-    defaultCode: `// Welcome to the Retro Editor!
-#include <iostream>
-
-int main() {
-    std::cout << "Hello, World!" << std::endl;
-    return 0;
-}`
-  },
-  java: {
-    name: "Java",
-    version: "15.0.2",
-    defaultCode: `// Welcome to the Retro Editor!
-public class Main {
-    public static void main(String[] args) {
-        System.out.println("Hello, World!");
-    }
-}`
-  }
-};
+import { useEditorStore, LANGUAGES } from "../../store/editorStore";
 
 export default function CodeEditorModule() {
-  const [language, setLanguage] = useState("javascript");
-  const [code, setCode] = useState(LANGUAGES["javascript"].defaultCode);
-  const [stdin, setStdin] = useState("");
+  const { language, setLanguage, code, setCode, stdin, setStdin } = useEditorStore();
   const [output, setOutput] = useState("");
   const [isRunning, setIsRunning] = useState(false);
 
   const handleLanguageChange = (e) => {
-    const newLang = e.target.value;
-    setLanguage(newLang);
-    setCode(LANGUAGES[newLang].defaultCode);
+    setLanguage(e.target.value);
     setOutput("");
   };
 
   const handleRun = async () => {
+    if (isRunning) return;
     setIsRunning(true);
     setOutput("Running...");
 
@@ -81,9 +36,21 @@ export default function CodeEditorModule() {
       const msg = err.response?.data?.error || err.message;
       setOutput("Error executing code:\n" + msg);
     } finally {
-      setIsRunning(false);
+      setTimeout(() => setIsRunning(false), 500); // 500ms debounce
     }
   };
+
+  // Keyboard shortcut Ctrl+Enter to run code
+  useEffect(() => {
+    const handleKeyDown = (e) => {
+      if ((e.ctrlKey || e.metaKey) && e.key === 'Enter') {
+        e.preventDefault();
+        handleRun();
+      }
+    };
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [language, code, stdin, isRunning]);
 
   return (
     <div className="flex flex-col gap-2 w-full h-[500px]">

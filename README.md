@@ -28,7 +28,7 @@ A retro, Windows-98-styled platform for learning data structures and algorithms 
 **Backend:** Java 21, Spring Boot 3 (Web, Security, Data JPA, Validation), PostgreSQL, JWT (jjwt), WebClient
 
 **External services:**
-- [Glot.io](https://glot.io) — real, sandboxed code execution
+- [OnlineCompiler.io](https://onlinecompiler.io) — real, sandboxed code execution
 - [Groq](https://groq.com) — LLM-powered chatbot (Llama 3.3)
 
 **Infrastructure:**
@@ -43,7 +43,7 @@ A retro, Windows-98-styled platform for learning data structures and algorithms 
 A few deliberate decisions worth knowing about, if you're reading the code:
 
 - **DTOs are separate from entities everywhere.** Controllers never accept or return JPA entities directly — every request/response has its own DTO. This keeps validation rules where they belong (on incoming data, not the database model) and makes it structurally impossible to accidentally leak something like a password hash in an API response.
-- **Code execution went through two pivots.** Originally built against Judge0, then switched to Piston when Judge0's free tier required a paid API key. Piston's public API later restricted access too, so the final version uses Glot.io. Each swap only ever touched one service class (`CodeExecutionService`) — the controller, DTOs, and frontend never changed, since they only depend on a stable internal contract.
+- **Code execution went through multiple pivots.** Originally built against Judge0, then switched to Piston when Judge0's free tier required a paid API key. Piston's public API later restricted access too, so the final version uses OnlineCompiler.io. Each swap only ever touched one service class (`CodeExecutionService`) — the controller, DTOs, and frontend never changed, since they only depend on a stable internal contract.
 - **Stateless JWT auth**, with a filter (`JwtAuthFilter`) that runs once per request, verifies the token, and populates Spring Security's context — no server-side session storage at all.
 - **Split endpoint visibility deliberately, not by default.** `/api/auth/**`, `/api/modules/**`, and `/api/chat/**` are public; everything else (code execution, progress) requires a valid token — a conscious tradeoff between lowering friction for a first-time visitor and gating the features that persist data.
 
@@ -79,7 +79,7 @@ A few deliberate decisions worth knowing about, if you're reading the code:
 **Backend:**
 1. Create a PostgreSQL database.
 2. Copy `backend/src/main/resources/application.properties` and fill in your own database credentials.
-3. Set these environment variables: `DB_PASSWORD`, `JWT_SECRET`, `GLOT_API_TOKEN`, `GROQ_API_KEY`.
+3. Set these environment variables: `DB_PASSWORD`, `JWT_SECRET`, `ONLINECOMPILER_API_KEY`, `GROQ_API_KEY`.
 4. `cd backend && mvn spring-boot:run`
 
 **Frontend:**

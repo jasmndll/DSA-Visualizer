@@ -13,9 +13,10 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
 
-import java.util.List;
 import java.util.Map;
 
+// Calls OnlineCompiler.io (https://onlinecompiler.io/docs) - sync REST
+// endpoint, free tier: 1,000,000 requests/month, no card required.
 @Service
 @RequiredArgsConstructor
 public class CodeExecutionService {
@@ -25,68 +26,51 @@ public class CodeExecutionService {
     private final ModuleRepository moduleRepository;
     private final CodeSubmissionRepository codeSubmissionRepository;
 
-    @Value("${glot.api.url}")
-    private String glotUrl;
+    @Value("${onlinecompiler.api.url}")
+    private String apiUrl;
 
-    @Value("${glot.api.token}")
-    private String glotToken;
+    @Value("${onlinecompiler.api.key}")
+    private String apiKey;
 
-    private static final Map<String, String> LANGUAGE_SLUGS = Map.of(
-            "javascript", "javascript",
-            "python", "python",
-            "java", "java",
-            "cpp", "cpp"
-    );
-
-    private static final Map<String, String> FILE_EXTENSIONS = Map.of(
-            "javascript", "js",
-            "python", "py",
-            "java", "java",
-            "cpp", "cpp"
+    // JavaScript isn't a distinct compiler here - Deno's TypeScript
+    // runtime executes standard JS syntax fine, so it's the closest fit.
+    private static final Map<String, String> COMPILERS = Map.of(
+            "javascript", "typescript-deno",
+            "python", "python-3.14",
+            "java", "openjdk-25",
+            "cpp", "g++-15"
     );
 
     public CodeExecutionResponse execute(CodeExecutionRequest request, String username) {
-        String slug = LANGUAGE_SLUGS.get(request.getLanguage());
-        String extension = FILE_EXTENSIONS.get(request.getLanguage());
-        if (slug == null) {
+        String compiler = COMPILERS.get(request.getLanguage());
+        if (compiler == null) {
             throw new IllegalArgumentException("Unsupported language: " + request.getLanguage());
         }
 
-        String fileName = "java".equals(request.getLanguage())
-                ? "Main.java"
-                : "main." + extension;
-
         Map<String, Object> body = Map.of(
-                "files", List.of(Map.of(
-                        "name", fileName,
-                        "content", request.getCode()
-                )),
-                "stdin", request.getStdin() != null ? request.getStdin() : ""
+                "compiler", compiler,
+                "code", request.getCode(),
+                "input", request.getStdin() != null ? request.getStdin() : ""
         );
 
         Map<String, Object> result = webClient.post()
-                .uri(glotUrl + "/run/" + slug + "/latest")
-                .header("Authorization", "Token " + glotToken)
+                .uri(apiUrl)
+                .header("Authorization", apiKey)
                 .header("Content-Type", "application/json")
                 .bodyValue(body)
                 .retrieve()
                 .bodyToMono(Map.class)
                 .block();
 
-        String stdout = (String) result.get("stdout");
-        String stderr = (String) result.get("stderr");
-        String status = (stderr == null || stderr.isEmpty()) ? "Success" : "Runtime Error";
+        String stdout = (String) result.get("output");
+        String stderr = (String) result.get("error");
+        String status = "success".equals(result.get("status")) ? "Success" : "Runtime Error";
 
         saveSubmission(request, username, stdout, stderr, status);
 
         return new CodeExecutionResponse(stdout, stderr, status);
     }
 
-    // Records every run so the heatmap (and later, submission history)
-    // has real data to aggregate. Failing to save shouldn't break the
-    // actual code execution response the student is waiting on, so this
-    // stays a simple best-effort call rather than wrapping execute()
-    // itself in extra risk.
     private void saveSubmission(CodeExecutionRequest request, String username,
                                 String stdout, String stderr, String status) {
         User user = userRepository.findByUsername(username).orElse(null);
